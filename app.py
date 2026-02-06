@@ -37,11 +37,16 @@ with open(VECTORIZER_PATH, "rb") as f:
 class Message(BaseModel):
     sender: str
     text: str
+    class Config:
+        extra = "allow"
 
 class HoneypotRequest(BaseModel):
     sessionId: str
     message: Message
     conversationHistory: List[Message] = []
+
+    class Config:
+        extra = "allow"
 
 # ---------------- Scam Detection ----------------
 def detect_scam_ml(text: str) -> float:
@@ -111,11 +116,7 @@ def honeypot(
 
     return {
         "status": "success",
-        "scamDetected": scam_detected,
-        "mlScore": round(ml_score, 3),
-        "bankingKeywordHits": keyword_hits,
         "reply": reply,
-        "extractedIntelligence": extracted_intelligence
     }
 
 # ---------------- Session Summary (INTERNAL) ----------------
